@@ -13,6 +13,7 @@ class Subject(models.Model):
         return self.title
 
 class Course(models.Model):
+    # Owner -> instructor / creator of the course
     owner = models.ForeignKey(User,
                     related_name='courses_created',
                     on_delete=models.CASCADE)
