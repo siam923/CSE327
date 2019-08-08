@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.views.generic.list import ListView
 from .models import Course
 from django.contrib.auth.mixins import LoginRequiredMixin, \
@@ -24,7 +25,7 @@ class OwnerEditMixin(object):
 class OwnerCourseMixin(OwnerMixin, LoginRequiredMixin):
     model = Course
 
-class OwnerCoursEditMixin(OwnerCourseMixin, OwnerEditMixin):
+class OwnerCourseEditMixin(OwnerCourseMixin, OwnerEditMixin):
     fields = ['subject', 'title', 'slug', 'overview']
     success_url = reverse_lazy('manage_course_list')
     template_name = 'courses/manage/course/form.html'
