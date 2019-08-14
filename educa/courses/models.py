@@ -39,7 +39,7 @@ class Module(models.Model):
                         on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True)
-    order = OrderField(blank=True, for_fields=['courses'])
+    order = OrderField(blank=True, for_fields=['course'])
 
     class Meta:
         ordering = ['order'] #default ordering
@@ -50,22 +50,20 @@ class Module(models.Model):
 
 class Content(models.Model):
     module = models.ForeignKey(Module,
-                                related_name='contents',
-                                on_delete=models.CASCADE)
+                               related_name='contents',
+                               on_delete=models.CASCADE)
     content_type = models.ForeignKey(ContentType,
-                                     on_delete=models.CASCADE,
-                                     limit_choices_to={'model_in':(
-                                                            'text',
-                                                            'video',
-                                                            'image',
-                                                            'file')})
+                                     limit_choices_to={'model__in':('text',
+                                                                    'video',
+                                                                    'image',
+                                                                    'file')},
+                                     on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     item = GenericForeignKey('content_type', 'object_id')
     order = OrderField(blank=True, for_fields=['module'])
 
     class Meta:
-        ordering = ['order']
-
+            ordering = ['order']
 
 class ItemBase(models.Model):
     owner = models.ForeignKey(User,

@@ -26,7 +26,9 @@ class CourseModuleUpdateView(TemplateResponseMixin, View):
         return ModuleFormSet(instance=self.course, data=data)
 
     def dispatch(self, request, pk):
-        self.course = get_object_or_404(Course, id=pk, owner=request.user)
+        self.course = get_object_or_404(Course,
+                                        id=pk,
+                                        owner=request.user)
         return super(CourseModuleUpdateView, self).dispatch(request, pk)
 
     def get(self, request, *args, **kwargs):
@@ -41,8 +43,6 @@ class CourseModuleUpdateView(TemplateResponseMixin, View):
             return redirect('manage_course_list')
         return self.render_to_response({'course': self.course,
                                         'formset': formset})
-
-
 
 # Owner mixins allows to define the behaviour of class
 class OwnerMixin(object):
