@@ -104,7 +104,7 @@ class ContentCreateUpdateView(TemplateResponseMixin, View):
     def get_model(self, model_name):
         if model_name in ['text', 'video', 'image', 'file']:
             return apps.get_model(app_label='courses',
-                                  model_name=modelname)
+                                  model_name=model_name)
         return None
 
     def get_form(self, model, *args, **kwargs):
@@ -117,17 +117,15 @@ class ContentCreateUpdateView(TemplateResponseMixin, View):
 
     def dispatch(self, request, module_id, model_name, id=None):
         self.module = get_object_or_404(Module,
-                                        id=module_id,
-                                        course_owner=request.user)
+                                       id=module_id,
+                                       course__owner=request.user)
         self.model = self.get_model(model_name)
         if id:
             self.obj = get_object_or_404(self.model,
                                          id=id,
                                          owner=request.user)
-        return super(ContentCreateUpdateView, self).dispatch(request,
-                                                             module_id,
-                                                             model_name,
-                                                             id)
+        return super(ContentCreateUpdateView,
+           self).dispatch(request, module_id, model_name, id)
 
     def get(self, request, module_id, model_name, id=None):
         form = self.get_form(self.model, instance=self.obj)
@@ -150,3 +148,15 @@ class ContentCreateUpdateView(TemplateResponseMixin, View):
             return redirect('module_content_list', self.module.id)
         return self.render_to_response({'form': form,
         'object': self.obj})
+
+
+class ContentDeleteView(View):
+
+    def post(self, request, id):
+        content = get_object_or_404(Content,
+                                    id=id,
+                                    module__course__owner=request.user)
+        module = content.module
+        content.item.delete()
+        content.delete()
+        return redirect('module_content_list', module.id)
