@@ -14,5 +14,10 @@ The project will be built with django as backend framework and bootstrap, react 
 * create your own branch
 * perform pull request
 
+### Requirements
+* Django
+* pillow
+* django-braces==1.13.0
+
 For frontend add your work in the __Frontend__ directory.
 We will be using backend api endpoints to connect with the frontend. The EER model will be uploaded here soon.  

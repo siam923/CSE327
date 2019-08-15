@@ -3,9 +3,9 @@
 {% block title %}
   {% if object %}
     Edit course "{{ object.title }}"
-    {% else %}
-      Create a new course
-    {% endif %}
+  {% else %}
+    Create a new course
+  {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -16,7 +16,6 @@
       Create a new course
     {% endif %}
   </h1>
-
   <div class="module">
     <h2>Course info</h2>
     <form action="." method="post">
