@@ -5,6 +5,12 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from .fields import OrderField
 # Create your models here.
 
+
+students = models.ManyToManyField(User,
+                                  related_name='courses_joined',
+                                  blank=True)
+
+
 class Subject(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200, unique=True)
