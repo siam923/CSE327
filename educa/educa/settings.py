@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'courses.apps.CoursesConfig',
     'students.apps.StudentsConfig',
     'embed_video',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -107,6 +108,12 @@ USE_L10N = True
 
 USE_TZ = True
 
+
+## Graphing diagram of apps
+GRAPH_MODELS = {
+  'all_applications': True,
+  'group_models': True,
+}
 
 
 # Static files (CSS, JavaScript, Images)
