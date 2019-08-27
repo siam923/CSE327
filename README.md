@@ -19,7 +19,10 @@ The project will be built with django as backend framework and bootstrap, react 
 * pillow
 * django-braces==1.13.0
 * django-embed-video==1.1.2
-> For generating graph diagram e.g uml 
+* django-allauth
+* opencv
+* matplotlib
+> For generating graph diagram e.g uml
 * django-extensions
 * pydotplus  -> includes pyparsing
 
