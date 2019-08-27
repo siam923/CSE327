@@ -5,7 +5,7 @@ from courses.views import CourseListView
 
 from django.conf import settings
 from django.conf.urls.static import static
-
+from .views import simple_upload
 
 urlpatterns = [
     path('admin/', admin.site.urls),
