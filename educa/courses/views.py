@@ -1,29 +1,19 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic.list import ListView
-from .models import Course
-from django.contrib.auth.mixins import LoginRequiredMixin, \
-                                        PermissionRequiredMixin
+from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, \
-                                            DeleteView
-
-## Inline Form
+                                      DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, \
+                                       PermissionRequiredMixin
 from django.shortcuts import redirect, get_object_or_404
 from django.views.generic.base import TemplateResponseMixin, View
-from .forms import ModuleFormSet
-
-# CONTENT TO COURSE MODULE
 from django.forms.models import modelform_factory
 from django.apps import apps
-from .models import Module, Content
-
 from braces.views import CsrfExemptMixin, JsonRequestResponseMixin
-
-# Course display view
-from django.views.generic.detail import DetailView
 from django.db.models import Count
-from .models import Subject
-
+from .models import Subject, Course, Module, Content
+from .forms import ModuleFormSet
 from students.forms import CourseEnrollForm
 
 
@@ -71,6 +61,8 @@ class OwnerEditMixin(object):
 
 class OwnerCourseMixin(OwnerMixin, LoginRequiredMixin):
     model = Course
+    fields = ['subject', 'title', 'slug', 'overview']
+    success_url = reverse_lazy('manage_course_list')
 
 class OwnerCourseEditMixin(OwnerCourseMixin, OwnerEditMixin):
     fields = ['subject', 'title', 'slug', 'overview']
@@ -118,7 +110,6 @@ class ContentCreateUpdateView(TemplateResponseMixin, View):
         return None
 
     def get_form(self, model, *args, **kwargs):
-        # factory design pattern
         Form = modelform_factory(model, exclude=['owner',
                                                  'order',
                                                  'created',
@@ -140,13 +131,13 @@ class ContentCreateUpdateView(TemplateResponseMixin, View):
     def get(self, request, module_id, model_name, id=None):
         form = self.get_form(self.model, instance=self.obj)
         return self.render_to_response({'form': form,
-        'object': self.obj})
+                                        'object': self.obj})
 
     def post(self, request, module_id, model_name, id=None):
         form = self.get_form(self.model,
-        instance=self.obj,
-        data=request.POST,
-        files=request.FILES)
+                             instance=self.obj,
+                             data=request.POST,
+                             files=request.FILES)
         if form.is_valid():
             obj = form.save(commit=False)
             obj.owner = request.user
@@ -154,10 +145,11 @@ class ContentCreateUpdateView(TemplateResponseMixin, View):
             if not id:
                 # new content
                 Content.objects.create(module=self.module,
-                item=obj)
+                                       item=obj)
             return redirect('module_content_list', self.module.id)
+
         return self.render_to_response({'form': form,
-        'object': self.obj})
+                                        'object': self.obj})
 
 
 class ContentDeleteView(View):
@@ -206,6 +198,10 @@ class ContentOrderView(CsrfExemptMixin,
 
 
 ## course display
+class SubjectListView(ListView):
+    model = Subject
+    template_name = 'courses/subject/list.html'
+
 
 class CourseListView(TemplateResponseMixin, View):
     model = Course
